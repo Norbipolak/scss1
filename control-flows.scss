@@ -1,0 +1,187 @@
+/*
+Vezérlési szerkezetek:
+if-else
+for
+while
+each
+
+Pontosan ugyanugy müködnek, mint a JavaScriptben 
+*/
+
+$theme: "dark";
+
+.my-class {
+    @if $theme =="dark" {
+        background-color: #434343;
+    } @else {
+        background-color: #989898;
+    }
+}
+/*be kell írni a konzolba, hogy lefordítsa -> sass control-flow.scss control-flow.css
+css-ben ezt jelent meg ->
+.my-class {
+    background-color: #434343;
+}
+*/
+/*
+ha pedig itt átírjuk valami másra pl. $theme:"light"
+akkor a másik fog megjelenni scc-ben 
+.my-class {
+    background-color: #989898;
+}
+*/
+
+/*for ciklus -> két változata is létezik*/
+
+@for $i from 1 to 10 {
+    @debug "i = " + $i;
+}
+/*
+Debug: i = 1
+Debug: i = 2
+Debug: i = 3
+Debug: i = 4
+Debug: i = 5
+Debug: i = 6
+...
+Debug: i = 9
+
+Ezek használhatók azokhoz a dolgokhoz, amelyek hasonlóak a programozási nyelvekben a for ciklus, amikor i kisebb mint valami és nem fogja elérni
+szóval to-nál nem éri el 
+*/
+
+/*viszont a from- through-nál igen (intervallum végét el fogja érni)*/
+@for $i from 1 through 10 {
+    @debug "i = " + $i;
+}
+/*
+Debug: i = 1
+Debug: i = 2
+...
+Debug: i = 10
+*/
+
+/*while ciklus*/
+$counter:0;
+
+@while($counter < 15) {
+    $counter:$counter+1;//nincsen ++, ha azt szeretnénk, hogy minden körben hozzadjunk egyet
+    @debug "counter: " + $counter;
+}
+/*
+Debug: counter: 1
+Debug: countr: 2
+...
+Debug: counter: 15
+
+15-ig jelennek meg a számok, mert ha counter 14 , akkor még be tudunk menni és hozzáadunk eggyet 
+teljesen ugyanugy müködik, mint a JavaScriptben 
+*/
+
+/*ha van egy listánk -> each*/
+$positions:static, relative, absolute, fixed, sticky;
+
+@each $position in $positions {
+    .position-#{$position} //ez itt a behelyetesítésünk{}
+        position:$position;
+};
+
+/*
+elöször lesz egy position static aztán relative.....nevű classem
+Erre is jó lehet a sass, hogy azokat a tulajdonságokat, amiket sokszor adunk meg 
+különböző tag-aknek azokat külön class-ekben tároljuk pl.float.left, meg a displayek: grid, flex, inline, inline-block stb.
+
+ha ezt lefordítjuk css-be akkor megjelennek ->
+.position-static {
+    position: static;
+}
+.position-relative {
+    position: relative;
+}
+.position-absolite {
+    position: absolute;
+}
+.position-fixed {
+    position: fixed;
+}
+.position-sticky {
+    position: sticky;
+}
+
+és, ha mondjuk 25 class-nek kell megadni, hogy position: static, akkor minegyiknek 25-ször felsorolom 
+az 25 plusz sor a css-ben
+*/
+
+/*Erre is jó példa ->*/
+
+$colors:(
+    "primary":#222222,
+    "secondary:":#654321,
+    "grey":#787878
+);
+@each $className /*key*/, $color /*value*/ in $colors {
+    .bg-#{className}{
+        background-color: $color; /*value*/
+    }
+    .color-#{className}{
+        color: $color; /*value*/
+    }
+};
+
+/*
+bg -> background-color, color-> betűszín
+
+.bg-primary {
+    background.color: #222222;
+}
+.color-primary {
+    color: #222222;
+}
+.bg-secondary {
+    background.color: #654321;
+}
+.color-secondary {
+    color: #654321;
+}
+.bg-grey {
+    background.color: #787878;
+}
+.color-grey {
+    color: #787878;
+}
+*/
+
+/*
+index.htmlbe csináltunk egy divet aminek, megadtuk a classokat amit, most csináltunk
+<div class="bg-primary color-secondary" style="padding:50px;"></div>
+
+Az a lényeg, hogy modulárisan össze tudjuk rakni a kódunkat, mert azt is tudjuk csinálni ->
+*/
+
+@for $i from 1 through 10 {
+    .padding-#{$i*5} {
+        padding:#{$i*5}px;
+    }
+}
+/*
+és ha lefordítjuk ->
+.padding-5 {
+    padding: 5px;
+}
+.padding-10 {
+    padding: 10px;
+}
+.padding-15 {
+    padding: 15px;
+}
+.padding-20 {
+    padding: 20px;
+}
+.padding-25 {
+    padding: 25px;
+}
+........
+
+akkor már index.html-ben nem kell adni neki egy 50px-eles paddinget a style attributummal ->
+<div class="bg-primary color-secondary padding-50"></div>
+*/

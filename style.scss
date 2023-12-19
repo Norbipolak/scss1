@@ -1,0 +1,52 @@
+$color:#123456;
+/*mindig dollárjel és kettőspont után adjuk meg az értékét*/
+$float:left;
+/*ha azt mondjuk, hogy float, ami nem a float tulajdonság, hanem ez egy float nevű változó
+és left akkor a left is lehet a változó értéke vagy 150px a heightnál -> a pixel is lehet a változó értéke  
+*/
+$height:150px;
+$width:150px;
+$padding:1em;
+
+/*
+ezeket így tudjuk használni, ->
+csinálunk változókat, valamilyen értékkel utána 
+csinálunk pl. itt valamilyen classt amibe beleírunk valamilyen tulajdonságot (background-color, float, height) és ahelyett, hogy ide 
+beírnánk, hogy milyen értéket szeretnénk neki beírjuk a változó nevét amit csináltunk feül(itt pl.color, float stb) 
+*/
+
+.my-class {
+    background-color: $color;
+    float:$float;
+    height: $height;
+    width: $width;
+    padding: $padding;
+}
+/*
+az nem müködik, mint a sima css-nél mert a böngésző nem ismeri fel
+tehát, ha csinálunk egy index.html-t és link-vel (href) megadjuk neki, hogy style.scss az ugy nem müködik 
+nem tudja  böngésző értelmezni a scss kódot és ennek az az oka, hogy ezt a szintaxist nem tudja olvasni
+a böngeszönkben lévő css parser
+mit kell csinálni, hogy tudja olvasni -> 
+terminálon kell csinálni ->
+sass style.scss (forrásfájl) style.css (kimeneti fájl neve - ide azt irunk be amit akarunk .css)
+
+két fájl fog nekem generálodni egy .css és egy .css.map
+css fájlban ez fog megjelenni -> 
+.my-class {
+    background-color: #123456;
+    float: left;
+    height: 150px;
+    width: 150px;
+    padding: 1em;
+}
+
+behelyetesítette a változók értékét a megfelelő helyre
+
+a másik css.map 
+egy objektum amiben vannak ilyen értékek, hogy version, sourceRoot, sources, names, mapping, stb. a scss-ről 
+pl. "file":"style.css" a kimeneti fájl "sources":[style.scss] a forrásfájl 
+-> majd ki lehet kapcsolni, hogy ne generáljon ilyeneket, de ez most minket még nem zavar 
+*/
+
+/*most hivatkozunk a style.css-re az index.html-en a sötétkék négyzet amit csináltunk a my-class-ban*/

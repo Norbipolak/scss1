@@ -1,0 +1,146 @@
+/*Sok változót tudunk csinálni a scss-ben, ilyenek pl. a listák is, szám,string stb */
+$basicVariable:"Anni tejet inna"; //string
+$basicNum:55;
+/*tudunk listát is csinálni, ami naggyából a tömbökre hasonlít*/
+/*vesszővel elválasztással*/
+$list:1,2,3,4,5,6,7,8,9,10;
+/*így is mg tudjuk határozni -> vesszővel elválasztás és még van egy zárójelünk is */
+$list2:(1,2,3,4,5,6,7,8,9,10);
+/*és még így is meg tudjuk határozni -> szóközökkel választottuk el az egyes értékeket*/
+$list3:1 2 3 4 5 6 7 8 9 10;
+
+/*listák elemszámának a megállapítása*/
+$length:length(list);
+/*ha szeretnénk megnézni, hogy a változóinknak mi az értéke vagy debuggolni akarunk és konzolra kiírni valamit*/
+@debug "length: " + $length;// itt is müködnek az ilyen összefüző operátorok 
+/*
+ha ezt ki szeretnénk iratni, akkor azt kell beírni a terminálba, hogy sass variables.scss
+azt kapujuk meg, hogy Debug: length: 10
+nem csináltunk kimeneti fájlt, egyszerűen csak kiírja a debug-ot a terminal
+*/
+/*van még két konzolra kiírási forma*/
+@warn "Hiba történt"; /*nem végzetes hibánál szokás használni*/
+@error "Dobunk egy hibát (Leáll a kódnak a futása)";/*olyan mint a throw a JavaScriptben és itt le is áll a kódnak a futása*/
+@debug "Ezt már nem írja ki!";
+
+/*A listáknak egy-egy elemét is ki tudjuk szedni*/
+$third:nth($list, 3);
+/*
+kiszedjük nth-val a listánk 3 elemét, két értéket vár a listát, ahonnan kiszedjük és, hogy hányadik elemét
+*/
+@debug "A lista harmadik eleme: " + $third;
+/*
+Debug: A lista harmadik eleme: 3
+Az az érdekes, hogy a lista harmadik eleme az tényleg a 3, nem pedig a 3. indexű eleme -> 
+A listáknak az indexei 1-től kezdödnek (nem 0-tól)
+*/
+
+/*csinálunk még egy listát*/
+$list4:11,12,13,14,15,16,17,18,19,20;
+/*két vagy akár több listát tudunk egyesíteni ->join()!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+$joinedList:join($list, $list4);
+@debug $joinedList; /*kapunk egy másik listát, ami a kettőnek az összes elemét tartalmazza*/
+/*Debug: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20*/
+
+/*listához tudunk hozzáadni elemeket az append segytségével*/
+$joinedList:append($joinedList, 21);
+/*nem kell attól félni, hogy az append megváltoztatja az eredi listát, mert itt nincsen olyan
+hogy referenciaváltozó, mint a JavaScriptben  
+itt csak azt mondjuk, hogy $joinedList append $joinedList -> önmagához adja hozzá ezt az elemet append($joinedList, 21)
+és azt rakja be az eredeti listába, tehát itt a visszatérési érték az $joinedList meg a 21-es szám és akkor ez lesz a $joinedList értéke
+igy tudunk effektive hozzáadni a listához egy másik elemet
+*/
+
+/*ha azt mondjuk, hogy $newList
+akkor az a $jointedList-re nem lesz hatással és akkor $newList lesz a $jointedList meg a 21-es szám
+*/
+$newList:append($joinedList, 21);
+
+/**************************************************************************************************************************************/
+/*map-ek csinálása*/
+$colors:(
+    "black":#000000,
+    "white":#ffffff,
+    "primary":#123456,
+    "secondary":#654321
+);
+/*
+map az egy kulcs-értékpár halmaza
+Létrehoztunk egy kulcs-értékpár halmazt, amiben több értéket is tárolhatunk egyszerre
+a mapekbe bele tudunk rakni új elemet, össze tudunk füzni, meg ki tudunk belőle szedni 
+*/
+/*Ha ki karjuk szedni -> map-get, ami vár két paramétert
+1. a map 
+2. a kulcs neve ami a mapban van
+*/
+
+$black:map-get($colors, "black");
+@debug "black: " + $black;
+/*Debug: black: #000000*/
+
+/*
+map-has-key
+Le tudjuk ellenőrizni, hogy egy map rendelkezik-e egy bizonyos kulccsal 
+*/
+$grey:map-get($colors, "grey");
+@debug "grey: " + $grey;
+//egy üres stringet fodunk visszakapni Debug: grey: 
+
+/*emiatt, hogy hibás értéket kapok mert nincsen benne, le lehet ellenőrizni, hogy megtalálható-e egy kulcs benne*/
+$hasKey:map-has-key($colors, "grey");
+@debug "has key: " + $hasKey;// Debug: false -> van benne boolean típus
+
+/*vissza tudjuk kapni a map-ből az összes kulcsot -> ez egy lista lesz*/
+$keys:map-keys($colors);
+@debug $keys;// visszakapjuk az összes kulcsot -> Debug: "black", "white", "primary", "secondary"
+
+/*ha van keys, akkor kell lennie map-valuesnak is*/
+$values:map-values($colors);
+@debug $values; // visszakapjuk az összes értéket -> Debug: "#000000", "#ffffff", "#123456", "#654321"
+
+/*össze lehet fésülni ket map-et*/
+$colors:(
+    "black":#000000,
+    "white":#ffffff,
+    "primary":#123456,
+    "secondary":#654321
+);
+$colors2:(
+    "grey":#454545,
+    "error":#ff0000,
+    "warning":#ff6600
+);
+
+$joinedMap:map-merge($colors, $colors2);
+@debug $joinedMap;//és itt a listában már mindegyik megtalálható Debug: "black": "#000000, "white": "#ffffff", "primary": "#123456"......
+
+/*
+lehet belöle remove-olni is
+szeretnénk belöle kiszedni az errort és a warningot
+*/
+
+$removedColors:map-remove($joinedMap, "error"); // ki kell majd logolni az alatta lévő miatt 
+@debug $removedColors;
+/*
+ezt kétféleképpen tudjuk megtenni
+a $jointMap-ból kiszedjük azt a kulcsot, hogy error, igy lehet egyet kiszedni
+("black": "#000000, "white": "#ffffff", "primary": "#123456"......error már nincsen benne)
+*/
+
+/*ha egyszerre kettőt szeretnénk kivenni
+2. paraméternek megadjuk mindkét változót és így mindakettőt ki fogja nekünk szedni*/
+$removedColors:map-remove($joinedMap, "error", "warning");
+@debug $removedColors;
+
+/******************************************************************************************************************************/
+/*Vezérlési szerkeztek -> control-flows.scss*/
+
+
+
+
+
+
+
+
+
+
