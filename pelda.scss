@@ -1,0 +1,13 @@
+$colors:(
+    "primary":#222222,
+    "secondary:":#654321,
+    "grey":#787878
+);
+@each $className /*key*/, $color /*value*/ in $colors {
+    .bg-#{className}{
+        background-color: $color; /*value*/
+    }
+    .color-#{className}{
+        color: $color; /*value*/
+    }
+};
